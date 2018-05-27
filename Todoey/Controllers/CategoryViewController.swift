@@ -24,6 +24,15 @@ class CategoryViewController: SwipeTableViewController {
         tableView.separatorStyle = .none
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        guard let navBar = navigationController?.navigationBar else {
+            fatalError("Navigation controller does not exist")
+        }
+        
+         navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : FlatWhite()]
+        
+    }
 
     // MARK: - Table view data source
 
@@ -36,9 +45,17 @@ class CategoryViewController: SwipeTableViewController {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
+        cell.selectionStyle = .none
+        
         if let category = categories?[indexPath.row] {
+            
             cell.textLabel?.text = category.name ?? "No Categories Added Yet"
-            cell.backgroundColor = UIColor(hexString: category.colour ?? "1D9BF6")
+            
+            guard let categoryColour = UIColor(hexString: category.colour) else {fatalError()}
+            
+            cell.backgroundColor = categoryColour
+            cell.textLabel?.textColor = ContrastColorOf(categoryColour, returnFlat: true)
+            
         }
         
         return cell
